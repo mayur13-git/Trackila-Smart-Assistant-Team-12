@@ -1,0 +1,18 @@
+import json
+
+class Database:
+    def __init__(self, filename='data/complaints.json'):
+        self.filename = filename
+        self.load_data()
+
+    def load_data(self):
+        if not os.path.exists(self.filename):
+            self.complaints = []
+        else:
+            with open(self.filename, 'r') as file:
+                self.complaints = json.load(file)
+
+    def save_complaint(self, complaint):
+        self.complaints.append(complaint)
+        with open(self.filename, 'w') as file:
+            json.dump(self.complaints, file)

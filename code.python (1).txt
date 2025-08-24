@@ -1,0 +1,22 @@
+import json
+import os
+from database import Database
+
+class Chatbot:
+    def __init__(self):
+        self.db = Database()
+
+    def get_response(self, query):
+        if "bus timings" in query.lower():
+            return "Bus timings are available on our website."
+        elif "ticket fare" in query.lower():
+            return "Ticket fares vary by route. Please check our fare chart."
+        elif "routes" in query.lower():
+            return "You can find all routes on our routes page."
+        elif "complaint" in query.lower():
+            return "Please register your complaint."
+        else:
+            return "I'm sorry, I didn't understand that."
+
+    def register_complaint(self, complaint):
+        self.db.save_complaint(complaint)
