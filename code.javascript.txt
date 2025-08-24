@@ -1,0 +1,17 @@
+async function sendQuery() {
+    const userInput = document.getElementById('user-input').value;
+    const chatWindow = document.getElementById('chat-window');
+
+    chatWindow.innerHTML += `<div class="user-message">${userInput}</div>`;
+    document.getElementById('user-input').value = '';
+
+    const response = await fetch('/query', {
+        method: 'POST',
+        headers: {
+            'Content-Type': 'application/json'
+        },
+        body: JSON.stringify({ query: userInput })
+    });
+    const data = await response.json();
+    chatWindow.innerHTML += `<div class="bot-response">${data.response}</div>`;
+}
