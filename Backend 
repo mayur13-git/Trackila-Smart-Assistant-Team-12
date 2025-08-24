@@ -1,0 +1,73 @@
+App Code'-
+
+from flask import Flask, request, jsonify
+from chatbot import Chatbot
+
+app = Flask(__name__)
+chatbot = Chatbot()
+
+@app.route('/query', methods=['POST'])
+def handle_query():
+    user_query = request.json.get('query')
+    response = chatbot.get_response(user_query)
+    return jsonify({'response': response})
+
+@app.route('/register_complaint', methods=['POST'])
+def register_complaint():
+    complaint = request.json.get('complaint')
+    chatbot.register_complaint(complaint)
+    return jsonify({'message': 'Complaint registered successfully!'})
+
+if __name__ == '__main__':
+    app.run(debug=True)
+
+
+Chat Bot Code:- 
+
+import json
+import os
+from database import Database
+
+class Chatbot:
+    def __init__(self):
+        self.db = Database()
+
+    def get_response(self, query):
+        if "bus timings" in query.lower():
+            return "Bus timings are available on our website."
+        elif "ticket fare" in query.lower():
+            return "Ticket fares vary by route. Please check our fare chart."
+        elif "routes" in query.lower():
+            return "You can find all routes on our routes page."
+        elif "complaint" in query.lower():
+            return "Please register your complaint."
+        else:
+            return "I'm sorry, I didn't understand that."
+
+    def register_complaint(self, complaint):
+        self.db.save_complaint(complaint)
+
+
+Database Code:-
+
+import json
+
+class Database:
+    def __init__(self, filename='data/complaints.json'):
+        self.filename = filename
+        self.load_data()
+
+    def load_data(self):
+        if not os.path.exists(self.filename):
+            self.complaints = []
+        else:
+            with open(self.filename, 'r') as file:
+                self.complaints = json.load(file)
+
+    def save_complaint(self, complaint):
+        self.complaints.append(complaint)
+        with open(self.filename, 'w') as file:
+            json.dump(self.complaints, file)
+
+
+backend/requirements.txt:- Flask==2.0.1
