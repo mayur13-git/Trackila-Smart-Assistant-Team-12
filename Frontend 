@@ -1,0 +1,73 @@
+ HTML CODE:-
+
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="stylesheet" href="styles.css">
+    <title>Trackila Smart Assistant</title>
+</head>
+<body>
+    <div class="chat-container">
+        <div id="chat-window"></div>
+        <input type="text" id="user-input" placeholder="Type your query...">
+        <button onclick="sendQuery()">Send</button>
+    </div>
+    <script src="script.js"></script>
+</body>
+</html>
+
+
+CSS CODE:-
+
+
+body {
+    font-family: Arial, sans-serif;
+}
+
+.chat-container {
+    width: 400px;
+    margin: 0 auto;
+    border: 1px solid #ccc;
+    padding: 10px;
+}
+
+#chat-window {
+    height: 300px;
+    overflow-y: scroll;
+    border: 1px solid #ccc;
+    margin-bottom: 10px;
+}
+
+.user-message {
+    text-align: right;
+    color: blue;
+}
+
+.bot-response {
+    text-align: left;
+    color: green;
+}
+
+
+JS CODE:-
+
+async function sendQuery() {
+    const userInput = document.getElementById('user-input').value;
+    const chatWindow = document.getElementById('chat-window');
+
+    chatWindow.innerHTML += `<div class="user-message">${userInput}</div>`;
+    document.getElementById('user-input').value = '';
+
+    const response = await fetch('/query', {
+        method: 'POST',
+        headers: {
+            'Content-Type': 'application/json'
+        },
+        body: JSON.stringify({ query: userInput })
+    });
+    const data = await response.json();
+    chatWindow.innerHTML += `<div class="bot-response">${data.response}</div>`;
+}
